@@ -12,7 +12,7 @@ import boto3
 def my_funny_joke_archive_dag():
 
     # Define some variables - you would typically do this in the Airflow UI
-    s3_bucket = "fossasia-airflow-workshop/ricsue"
+    s3_bucket = "fossasia-apache-airflow-workshop/ricsue"
 
     time = datetime.now().strftime("%m/%d/%Y").replace('/', '-')
     csv_filename = f"jokes-{time}.csv"
