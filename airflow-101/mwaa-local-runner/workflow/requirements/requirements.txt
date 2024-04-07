@@ -1,0 +1,5 @@
+--constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.11.txt"
+
+# --constraint "/usr/local/airflow/dags/custom-constraints-2.7.2-3.11.txt"
+
+apache-airflow-providers-snowflake==5.0.1

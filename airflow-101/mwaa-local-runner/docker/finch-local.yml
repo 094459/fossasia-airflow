@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+    postgres:
+        image: postgres:11-alpine
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+            - PGDATA=/var/lib/postgresql/data
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        volumes:
+            - pgdata:/var/lib/postgresql/data:rw
+
+    local-runner:
+        image: amazon/mwaa-local:2_7
+        restart: always
+        depends_on:
+            - postgres
+        environment:
+            - LOAD_EX=n
+            - EXECUTOR=Local
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        volumes:
+            - "${PWD}/workflow/dags:/usr/local/airflow/dags"
+            - "${PWD}/workflow/plugins:/usr/local/airflow/plugins"
+            - "${PWD}/workflow/requirements:/usr/local/airflow/requirements"
+            - "${PWD}/startup_script:/usr/local/airflow/startup"
+        ports:
+            - "8080:8080"
+        command: local-runner
+        healthcheck:
+            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+        env_file:
+            - ./config/.env.localrunner
+volumes:
+    pgdata:

@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+    postgres:
+        image: postgres:11-alpine
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+            - PGDATA=/var/lib/postgresql/data
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        volumes:
+            - pgdata:/var/lib/postgresql/data:rw
+
+    resetdb:
+        image: amazon/mwaa-local:2_7
+        depends_on:
+            - postgres
+        environment:
+            - LOAD_EX=n
+            - EXECUTOR=Local
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        volumes:
+            - "/Users/ricsue/Projects/FOSSASIA/fossasia-airflow/airflow-101/workflow/dags:/usr/local/airflow/dags"
+            - "/Users/ricsue/Projects/FOSSASIA/fossasia-airflow/airflow-101/workflow/plugins:/usr/local/airflow/plugins"
+            - "/Users/ricsue/Projects/FOSSASIA/fossasia-airflow/airflow-101/workflow/requirements:/usr/local/airflow/requirements"
+            - "${PWD}/startup_script:/usr/local/airflow/startup"
+        ports:
+            - "8080:8080"
+        command: resetdb
+volumes:
+    pgdata:

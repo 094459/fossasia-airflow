@@ -1,0 +1,13 @@
+version: '3'
+volumes:
+  psql:
+services:
+  psql:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: change-me
+    volumes:
+      - psql:/var/lib/postgresql/data 
+    ports:
+      - 5555:5432
