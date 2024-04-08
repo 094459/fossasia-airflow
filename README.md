@@ -23,6 +23,17 @@ We will be building a simple workflow that is going to help us build a Joke repo
 
 We are going to access a well know API to retrieve 10 latest jokes. We will then build a workflow that allows us to save these to an Amazon S3 bucket, and then once cleaned up, we will ingest these into our PostgreSQL database (which we will be running locally)
 
+**Checking out this repository**
+
+Choose a working directoy, and then check out the workshop using git
+
+```
+git clone https://github.com/094459/fossasia-airflow.git
+
+```
+
+We will be following the README.md file, which you can access now locally within that repo, or [access it online](https://github.com/094459/fossasia-airflow)
+
 ## Setup and Installation
 
 There are many ways in which we can run Apache Airflow, but for this workshop we are going to use an open source project from AWS that makes using Airflow a breeze.
