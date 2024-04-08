@@ -1,87 +1,36 @@
-$AIRFLOW_VERSION = "2_7"
-$DOCKER_COMPOSE_PROJECT_NAME = "aws-mwaa-local-runner-$AIRFLOW_VERSION"
+param(
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("start","stop","build")]
+    [string]$action
+)
 
-function Display-Help {
-    Write-Host "======================================"
-    Write-Host "   MWAA Local Runner CLI"
-    Write-Host "======================================"
-    Write-Host "Syntax: .\mwaa-local-runner.ps1 [command]"
-    Write-Host "Airflow version $AIRFLOW_VERSION"
-    Write-Host "---commands---"
-    Write-Host "help                   Print CLI help"
-    Write-Host "build-image            Build Image Locally"
-    Write-Host "reset-db               Reset local PostgresDB container."
-    Write-Host "start                  Start Airflow local environment. (LocalExecutor, Using postgres DB)"
-    Write-Host "stop                   Stop Airflow local environment. (LocalExecutor, Using postgres DB)"
-    Write-Host "test-requirements      Install requirements on an ephemeral instance of the container."
-    Write-Host "package-requirements   Download requirements WHL files into plugins folder."
-    Write-Host "test-startup-script    Execute shell script on an ephemeral instance of the container."
-    Write-Host "validate-prereqs       Validate pre-reqs installed (docker, docker-compose, python3, pip3)"
-    Write-Host ""
+function Build-Container {
+    # Example Docker build command
+    docker build --rm --compress -t amazon/mwaa-local:2_7 ./docker
+    Write-Host "Docker build completed."
 }
 
-function Validate-Prereqs {
-    docker -v | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "'docker' is not installed or not runnable without sudo. ❌"
-    } else {
-        Write-Host "Docker is Installed. ✔"
-    }
-
-    docker-compose -v | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "'docker-compose' is not installed. ❌"
-    } else {
-        Write-Host "Docker compose is Installed. ✔"
-    }
-
-    python --version | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Python is not installed. ❌"
-    } else {
-        Write-Host "Python is Installed ✔"
-    }
-
-    pip --version | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Pip is not installed. ❌"
-    } else {
-        Write-Host "Pip is Installed. ✔"
-    }
+function Start-Container {
+    # Example Docker run command
+    docker-compose -p aws-mwaa-local-runner-2_7 -f ./docker/docker-compose-local.yml up
+    Write-Host "Docker container started."
 }
 
-function Build-Image {
-    docker build --rm --compress -t "amazon/mwaa-local:$AIRFLOW_VERSION" ./docker
+function Stop-Container {
+    # Example Docker stop command
+    ddocker-compose -p aws-mwaa-local-runner-2_7 -f ./docker/docker-compose-local.yml down
+    Write-Host "Docker container stopped and removed."
 }
 
-Switch ($args[0]) {
-    "validate-prereqs" {
-        Validate-Prereqs
-    }
-    "test-requirements" {
-        $BUILT_IMAGE = docker images -q "amazon/mwaa-local:$AIRFLOW_VERSION"
-        if ($BUILT_IMAGE) {
-            Write-Host "Container amazon/mwaa-local:$AIRFLOW_VERSION exists. Skipping build"
-        } else {
-            Write-Host "Container amazon/mwaa-local:$AIRFLOW_VERSION not built. Building locally."
-            Build-Image
-        }
-        docker run -v "${PWD}/dags:/usr/local/airflow/dags" -v "${PWD}/plugins:/usr/local/airflow/plugins" -v "${PWD}/requirements:/usr/local/airflow/requirements" -it "amazon/mwaa-local:$AIRFLOW_VERSION" test-requirements
-    }
-    "test-startup-script" { } # No operation, fall through
-    "package-requirements" { } # No operation, fall through
+Switch ($action) {
     "build-image" {
-        Build-Image
+        Build-Container
     }
-    "reset-db" { } # No operation, fall throug
-    "start" { } # No operation, fall through
-    "stop" { } # No operation, fall through
-    "help" {
-        Display-Help
+    "start" {
+        Start-Container
     }
-    Default {
-        Write-Host "No command specified, displaying help"
-        Display-Help
+    "stop" {
+        Stop-Container
     }
 }
 
