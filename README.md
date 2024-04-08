@@ -39,6 +39,10 @@ We will be running Airflow via containers, and so you will need Docker/Docker Co
 
 We also need to make sure that we have enough resources to run these containers - I have found these work fine with 2vCPUs and 4GB of RAM, as well as 50Gb of free disk space.
 
+*Windows Users*
+
+There is an experimental script called mwaa-local-env.ps1 that should allow those who are running new versions of Windows to run this workshop. You will need to make sure you have [Docker and Docker-compose installed.](https://docs.docker.com/desktop/install/windows-install/) 
+
 **2 - Create a new Python virtual environment**
 
 It is always good practice to start with a clean Python virutal environment.
