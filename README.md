@@ -206,7 +206,7 @@ If using Docker
 
 ```
 cd airflow-101/mwaa-local-runner
-chmod +x mwaa-local-runner
+chmod +x mwaa-local-env
 ./mwaa-local-env
 
 ```
