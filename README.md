@@ -187,7 +187,7 @@ There are a number of interesting configuration files you which we will not chan
 * docker-compose files - (docker directory) there are a number of docker compose files (docker-compose, and finch-) that are used to start Airflow and supporting services, including a PostgreSQL database. Also of note is the configuration to mount several local folders into these running containers, which is how we will be able to develop/work locally, whilst these containers are running. We can see from the following, that we are mapping our Airflow DAGs folder, as well as other supporting folders into key directories that Airflow expects. Within the directory structure, you can see where the source directories are (within the workflow directory)
 
 ```
-            - "/${PWD}/workflow/dags:/usr/local/airflow/dags"
+            - "${PWD}/workflow/dags:/usr/local/airflow/dags"
             - "${PWD}/workflow/plugins:/usr/local/airflow/plugins"
             - "${PWD}/workflow/requirements:/usr/local/airflow/requirements"
             - "${PWD}/startup_script:/usr/local/airflow/startup"
