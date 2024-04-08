@@ -68,11 +68,20 @@ Switch ($args[0]) {
         }
         docker run -v "${PWD}/dags:/usr/local/airflow/dags" -v "${PWD}/plugins:/usr/local/airflow/plugins" -v "${PWD}/requirements:/usr/local/airflow/requirements" -it "amazon/mwaa-local:$AIRFLOW_VERSION" test-requirements
     }
-    "test-startup-script", "package-requirements", "build-image", "reset-db", "start", "stop", "help" {
-        Write-Host "This functionality is not fully implemented in the PowerShell version. Please add the corresponding PowerShell commands similar to the Bash version."
+    "test-startup-script" { } # No operation, fall through
+    "package-requirements" { } # No operation, fall through
+    "build-image" {
+        Build-Image
+    }
+    "reset-db" { } # No operation, fall throug
+    "start" { } # No operation, fall through
+    "stop" { } # No operation, fall through
+    "help" {
+        Display-Help
     }
     Default {
         Write-Host "No command specified, displaying help"
         Display-Help
     }
 }
+
